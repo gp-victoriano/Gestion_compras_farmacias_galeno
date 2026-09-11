@@ -1,0 +1,22 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(gestor, "Gestor de Compras", "Usuario crea y aprueba órdenes")
+Person(bodega, "Encargado de Bodega", "Registra recepciones físicas")
+
+System_Boundary(c1, "Módulo de Compras Farmacias Galeno") {
+    Container(webApp, "Aplicación Web (SPA)", "React / Blazor", "Interfaz gráfica para emisión de órdenes")
+    Container(api, "API Backend Compras", "C# ASP.NET Core 8", "Lógica de negocio, autenticación JWT y orquestación de caché")
+    ContainerDb(db, "Base de Datos Principal", "SQL Server / PostgreSQL", "Almacena proveedores, productos y órdenes")
+    ContainerDb(redis, "Caché de Datos", "Redis In-Memory", "Caché de catálogos y órdenes frecuentes")
+}
+
+System_Ext(proveedorExt, "API Sistema Proveedores", "Sincronización de facturas")
+
+Rel(gestor, webApp, "Usa", "HTTPS")
+Rel(bodega, webApp, "Usa", "HTTPS")
+Rel(webApp, api, "Consume Endpoints REST", "HTTPS / JSON")
+Rel(api, db, "Consultas y escrituras", "EF Core / TCP 1433")
+Rel(api, redis, "Lectura / Escritura de caché", "StackExchange.Redis")
+Rel(api, proveedorExt, "Sincronización", "JSON / HTTPS")
+@enduml

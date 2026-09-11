@@ -1,0 +1,14 @@
+@startuml
+title Arquitectura Legada - Monolito C# .NET Framework 4.5
+
+node "Servidor Monolítico" {
+  [UI Proveedor] --> [ComprasController]
+  [UI Proveedor] --> [InventarioController]
+  [ComprasController] --> [Lógica de Negocio / BLL]
+  [InventarioController] --> [Lógica de Negocio / BLL]
+}
+
+database "Microsoft SQL Server\n(Procedimientos Almacenados)" as DB
+
+[Lógica de Negocio / BLL] --> DB : Consultas Directas
+@enduml

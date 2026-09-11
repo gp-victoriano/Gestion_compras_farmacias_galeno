@@ -1,0 +1,21 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(api, "API Backend Compras (C# ASP.NET Core 8)") {
+    Component(middleware, "Autenticación & Error Middleware", "C# Middleware", "Intercepta tokens JWT y manejo global de excepciones")
+    Component(controller, "ComprasController", "ASP.NET Core Controller", "Expone endpoints REST y mapea DTOs")
+    Component(service, "OrdenCompraService", "C# Service Class", "Validaciones de reglas de negocio, cálculo de totales e impuestos")
+    Component(cache, "RedisCacheManager", "C# Service Class", "Gestión de lecturas y políticas de invalidación en Redis")
+    Component(repo, "OrdenCompraRepository", "EF Core / LINQ", "Acceso a datos transaccionales")
+}
+
+ContainerDb(db, "Base de Datos", "SQL Server / PostgreSQL")
+ContainerDb(redis, "Caché Redis", "In-Memory")
+
+Rel(middleware, controller, "Pasa petición validada")
+Rel(controller, service, "Invoca lógica de negocio")
+Rel(service, cache, "Verifica o invalida caché")
+Rel(service, repo, "Persiste operaciones")
+Rel(cache, redis, "Get / Set / Invalidate")
+Rel(repo, db, "Consultas SQL")
+@enduml

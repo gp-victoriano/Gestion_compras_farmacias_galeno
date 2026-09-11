@@ -1,0 +1,10 @@
+ @startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(gestor, "Gestor de Compras", "Usuario operador de compras")
+System(sistemaCompras, "Módulo Compras Farmacias Galeno", "Permite la gestión de órdenes, proveedores y recepciones")
+System_Ext(proveedores, "API Sistema Proveedores", "Sincronización de facturas externas")
+
+Rel(gestor, sistemaCompras, "Consulta y gestiona órdenes de compra", "HTTPS")
+Rel(sistemaCompras, proveedores, "Sincroniza datos de facturación", "JSON / HTTPS")
+@enduml
